@@ -16,6 +16,13 @@ func SetRoutes(app *fiber.App){
 	app.Post("/login", controllers.Login)
 	app.Post("/logout", controllers.Logout)
 	app.Get("/user", controllers.User)
+	app.Get("/users", controllers.GetUsers)
+	
+	app.Post("api/v1/project", controllers.NewProject)
+	app.Get("api/v1/project", controllers.GetProjects)
+	
+	app.Patch("api/v1/project/state", controllers.PatchState)
+	app.Patch("api/v1/project/priority", controllers.PatchPriority)
 	
 	// API
 	app.Get("/api/v1/lead", func(c *fiber.Ctx) error{
@@ -59,3 +66,4 @@ func SetRoutes(app *fiber.App){
 })
 
 }
+

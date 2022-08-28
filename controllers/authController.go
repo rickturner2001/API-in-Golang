@@ -30,8 +30,7 @@ func Register(c *fiber.Ctx) error {
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 	
 	user := models.User{
-		Name: data["name"],
-		Email: data["email"],
+		Username: data["username"],
 		Password: password,
 	}
 
@@ -48,7 +47,7 @@ func Login(c *fiber.Ctx) error{
 
 	var user models.User
 
-	database.DBConection.Where("email = ?", data["email"]).First(&user)
+	database.DBConection.Where("username = ?", data["username"]).First(&user)
 	
 	if user.ID == 0{
 		c.Status(fiber.StatusNotFound)
@@ -126,4 +125,11 @@ func Logout(c *fiber.Ctx) error{
 	return c.JSON(fiber.Map{
 		"message": "Success",
 	})
+}
+
+func GetUsers(c *fiber.Ctx)error{
+	db := database.DBConection
+	var users []models.User
+	db.Find(&users)
+	return c.JSON(users)
 }
