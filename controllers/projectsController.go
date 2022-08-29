@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -13,29 +15,39 @@ func NewProject(c *fiber.Ctx) error{
 	db := database.DBConection
 	var data map[string]string
 	if err:= c.BodyParser(&data); err != nil{
+			fmt.Println("ERROR IS BODY-PARSER!")
+		fmt.Println(data)
 		return err
 	}
 
 	state, err := strconv.Atoi(data["state"]);
 	if err != nil{
+			fmt.Println("ERROR IS STATE!")
+		fmt.Println(state)
 		return err
 	} 
 
 	userID, err := strconv.Atoi(data["appointee"]);
 	if err != nil{
+			fmt.Println("ERROR IS USER-ID!")
+		fmt.Println(userID)
 		return err
 	}
 
 	priority, err := strconv.Atoi(data["priority"]);
 	if err != nil{
+			fmt.Println("ERROR IS PRIORITY!")
+		fmt.Println(priority)
 		return err
 	}
 
 	layout := "2006-01-02"
 	due := data["due"]
 
-	dueDate, err := time.Parse(layout, due)
+	dueDate, err := time.Parse(layout, due)	
 	if err != nil{
+			fmt.Println("ERROR IS DUE DATE!")
+		fmt.Println(dueDate)
 		return err
 	}
 
@@ -43,11 +55,22 @@ func NewProject(c *fiber.Ctx) error{
 	currentTime.Format("2006-01-02")
 
 
+	var attributesJson string = data["attributes"]
+	var projectAttributes models.ProjectAttribtes
+	
+	if err := json.Unmarshal([]byte(attributesJson), &projectAttributes); err != nil{
+		fmt.Println("ERROR IS ATTRIBUTES!")
+		fmt.Println(attributesJson)
+		return err
+	}
+
+
 	project := models.Project{
 		Task: data["task"],
 		State: state,
 		UserID: userID,
 		Priority: priority,
+		ProjectAttributes: attributesJson,
 		Due: dueDate,
 		Created: currentTime,
 	}

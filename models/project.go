@@ -15,5 +15,6 @@ type Project struct{
 	Priority  int `json:"priority"`
 	Due time.Time `json:"due"`
 	Created time.Time `json:"creation"`
+	ProjectAttributes string `json:"attributes"`
 
 }
